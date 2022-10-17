@@ -1,0 +1,5 @@
+{
+    "aws_region": "us-east-1",
+    "source_ami": "ami-0c02fb55956c7d316",
+    "subnet_id": "subnet-0d77d571ab37be98b"
+}

@@ -1,0 +1,18 @@
+[Unit]
+Description=Webservice App
+After=cloud-final.service
+
+[Service]
+WorkingDirectory=/home/ec2-user/app
+EnvironmentFile=/etc/systemd/system/db.env
+ExecStart=/usr/bin/node /home/ec2-user/app/server.js
+Restart=always
+RestartSec=10
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=webservice-app
+User=ec2-user
+
+[Install]
+WantedBy=multi-user.target
+WantedBy=cloud-init.target

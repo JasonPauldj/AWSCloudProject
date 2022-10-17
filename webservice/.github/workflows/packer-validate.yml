@@ -1,0 +1,35 @@
+---
+name: Packer Validate on Pull Requests
+
+on:
+  # Workflow will only be triggered for pull requests on "main" branch
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - run: zip -r webservice.zip ./
+
+      # Initialize Packer templates
+    - name: Initialize Packer Template
+      uses: hashicorp/packer-github-actions@master
+      with:
+          command: init
+          arguments: -var=aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }} -var=aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }} -var-file=dev-vars.pkrvars.json
+          target: ami.pkr.hcl
+
+    # Ref: https://github.com/marketplace/actions/packer-github-actions
+    - name: Validate Packer Template
+      uses: hashicorp/packer-github-actions@master
+      with:
+        command: validate
+        arguments: -var=aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }} -var=aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }} -var-file=dev-vars.pkrvars.json
+        target: ami.pkr.hcl
+      env:
+        PACKER_LOG: 1 # enable debug log for packer

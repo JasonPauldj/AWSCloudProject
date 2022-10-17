@@ -1,0 +1,39 @@
+{
+  "name": "webservice",
+  "version": "1.0.0",
+  "description": "This npm project is for the CSYE6225 course.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jasonpaulneu/webservice.git"
+  },
+  "author": "Jason Paul Darivemula",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jasonpaulneu/webservice/issues"
+  },
+  "homepage": "https://github.com/jasonpaulneu/webservice#readme",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.67.0",
+    "@aws-sdk/client-s3": "^3.53.1",
+    "@aws-sdk/client-sns": "^3.67.0",
+    "@aws-sdk/credential-provider-ini": "^3.53.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "hot-shots": "^9.0.0",
+    "joi": "^17.6.0",
+    "multer": "^1.4.4",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.16.1",
+    "winston": "^3.7.2"
+  },
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "supertest": "^6.2.2"
+  }
+}
