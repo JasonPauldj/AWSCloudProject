@@ -1,0 +1,32 @@
+name: Packer build AMI
+on: 
+  push:
+    branches : [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      
+       # zip the webservice node project
+      - run: zip -r webservice.zip ./
+
+
+      # Initialize Packer template
+      - name: Initialize Packer Template
+        uses: hashicorp/packer-github-actions@master
+        with:
+          command: init
+          arguments: -var=aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }} -var=aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }} -var-file=dev-vars.pkrvars.json
+          target: ami.pkr.hcl
+
+      # Build Packer template
+      - name: Build Artifact
+        uses: hashicorp/packer-github-actions@master
+        with:
+           command: build
+           arguments: -var=aws_access_key=${{ secrets.AWS_ACCESS_KEY_ID }} -var=aws_secret_key=${{ secrets.AWS_SECRET_ACCESS_KEY }} -var-file=dev-vars.pkrvars.json
+           target: ami.pkr.hcl

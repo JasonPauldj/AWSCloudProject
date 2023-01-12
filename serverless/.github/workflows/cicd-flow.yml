@@ -1,0 +1,40 @@
+name: CI/CD Flow
+
+env:
+  ARTIFACT_NAME: csye6225-webapp-${{ github.sha }}.zip
+
+on: 
+  push:
+    branches : [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      
+       # zip the webservice node project
+      - run: zip -r index.zip ./index.js
+
+      #install awscli
+      - run: pip install awscli
+
+      #cicd user credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.GH_LAMBDA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.GH_LAMBDA_AWS_SECRET_ACCESS_KEY }}
+
+      #sending zip to s3
+      - name: Copy artifact to s3
+        run: |
+          aws s3 cp index.zip s3://${{ secrets.S3_LAMBDA_BUCKET }}
+      
+      #running aws cli lambda
+      - name: AWS CLI lambda update
+        run: |
+          aws lambda update-function-code --function-name EmailService --region us-east-1 --zip-file fileb://index.zip

@@ -1,0 +1,22 @@
+---
+
+version: 0.0
+
+os: linux
+
+files:
+  - source: ./
+    destination: /home/ec2-user/app
+  - source: ./cloudwatch-agent-config.json
+    destination: /opt
+
+hooks:
+  BeforeInstall:
+    - location: ./codedeploy/beforeinstall.sh
+      runas: ec2-user
+  AfterInstall:
+    - location: ./codedeploy/afterinstall.sh
+      runas: ec2-user
+  ApplicationStart:
+    - location: ./codedeploy/applicationstart.sh
+      runas: ec2-user

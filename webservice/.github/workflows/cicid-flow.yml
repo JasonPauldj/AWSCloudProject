@@ -1,0 +1,41 @@
+name: CI/CD Flow
+
+env:
+  ARTIFACT_NAME: csye6225-webapp-${{ github.sha }}.zip
+
+on: 
+  push:
+    branches : [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      
+       # zip the webservice node project
+      - run: zip -r webservice.zip ./
+
+      #install awscli
+      - run: pip install awscli
+
+      #cicd user credentials
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: us-east-1
+          aws-access-key-id: ${{ secrets.GH_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.GH_AWS_SECRET_ACCESS_KEY }}
+
+      #sending zip to s3
+      - name: Copy artifact to s3
+        run: |
+          aws s3 cp webservice.zip s3://${{ secrets.S3_CODEDEPLOY_BUCKET }}
+      
+      #running code deploy
+      - name: Codedeploy API call
+        run: |
+          output=$(aws deploy create-deployment --application-name csye6225-webapp --deployment-group-name csye6225-webapp-deployment --deployment-config-name CodeDeployDefault.AllAtOnce --description "CSYE6225 - CodeDeploy"  --s3-location bucket=${{ secrets.S3_CODEDEPLOY_BUCKET }},key=webservice.zip,bundleType=zip --region us-east-1)
+          echo $output
