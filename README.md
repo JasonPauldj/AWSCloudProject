@@ -19,7 +19,7 @@
 ## Infrastructure
 
 ### Architecture
-![Architecture](./media/arch.png)
+![Architecture](./media/Arch.png)
 
 ### AWS CloudFormation
 - AWS CloudFormation deploys the following infrastructre
