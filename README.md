@@ -18,6 +18,9 @@
 
 ## Infrastructure
 
+### Architecture
+![Architecture](./media/arch.png)
+
 ### AWS CloudFormation
 - AWS CloudFormation deploys the following infrastructre
     - VPC
